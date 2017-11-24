@@ -5,12 +5,13 @@
     var main = document.getElementById("main");
     var board_el = document.createElement("div");
     var json_output = document.getElementById("dest");
+    var BIT_LENGTH = 32;
     var engine;
     var output;
 
     var boardSize = 400;
 
-    var inputFen = "rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPP2PPP/R1BQKBNR w KQkq - 2 4";
+    var inputFen = "r1bqkbnr/ppp2ppp/2np4/1B2p3/4P3/2N5/PPPP1PPP/R1BQK1NR b KQkq - 1 1";
 
     function createBoard(el, fen)
     {
@@ -229,12 +230,46 @@
         return engine;
     }
 
+    function bitboardToArray(bitsets)
+    {
+        function getBits(integer) {
+            var bits = integer.toString(2);
+            bits += '0'.repeat(BIT_LENGTH - bits.length);
+            return bits;
+        }
+
+        var bits = getBits(bitsets[0]) + getBits(bitsets[1]),
+            arr = [];
+
+        for (var i = 0; i < bits.length; i++) {
+            if (bits[i] === "1") {
+                var x = i % 8;
+                var y = Math.ceil(i / 8);
+                arr.push([x, y]);
+                alert([x,y]);
+            }
+        }
+
+        return arr;
+    }
+
+    function highlightBoard(locs) {
+        for (var loc in locs) {
+            // board.highlight_square(loc[0], loc[1], "red");
+            // alert(loc);
+        }
+    }
+
     function init()
     {
         updateEngine();
         updateBoard();
 
         output = formatOutput();
+
+        var vals = [0,8388608];
+        bitboardToArray(vals);
+        // highlightBoard(array);
 
         json_output.appendChild(renderjson(output));
     }
