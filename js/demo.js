@@ -7,7 +7,7 @@
     var json_output = document.getElementById("dest");
     var output;
 
-    var boardSize = 300;
+    var boardSize = 400;
 
     var inputFen = "rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPP2PPP/R1BQKBNR w KQkq - 2 4";
 
@@ -43,7 +43,7 @@
     {
         output = formatOutput();
 
-        json_output.replaceChild(json_output.firstChild, renderjson(output));
+        json_output.replaceChild(json_output.firstChild.value, renderjson(output)); // value?
     }
 
     function formatOutput()
