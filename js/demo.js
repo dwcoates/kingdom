@@ -5,6 +5,7 @@
     var main = document.getElementById("main");
     var board_el = document.createElement("div");
     var json_output = document.getElementById("dest");
+    var engine;
     var output;
 
     var boardSize = 400;
@@ -22,9 +23,15 @@
     function update()
     {
         updateFen();
+        updateEngine();
         updateBoard();
         updateJsonOutput();
         alert("updated"); // test
+    }
+
+    function updateEngine()
+    {
+        engine = load_engine();
     }
 
     function updateBoard()
@@ -224,6 +231,7 @@
 
     function init()
     {
+        updateEngine();
         updateBoard();
 
         output = formatOutput();
