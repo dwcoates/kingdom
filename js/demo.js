@@ -15,10 +15,43 @@
 
     function createBoard(el, fen)
     {
+        function bitboardToArray(bitsets)
+        {
+            function getBits(integer) {
+                var bits = integer.toString(2);
+                bits += '0'.repeat(BIT_LENGTH - bits.length);
+                return bits;
+            }
+
+            var bits = getBits(bitsets[0]) + getBits(bitsets[1]),
+                arr = [];
+
+            for (var i = 0; i < bits.length; i++) {
+                if (bits[i] === "1") {
+                    var x = i % 8;
+                    var y = Math.ceil(i / 8);
+                    arr.push([x, y]);
+                }
+            }
+
+            return arr;
+        }
+
+        function highlightBoard(board, locations) {
+            for (var i = 0; i < locations.length; i++) {
+                board.highlight_square(locations[i][0], locations[i][1], "red");
+            }
+        }
+
         var board = BOARD(el);
         board.size_board(boardSize, boardSize);
         board.set_board(fen);
         board.wait();
+
+        var vals = [0,8388608]; // test
+        var squares = bitboardToArray(vals);
+
+        highlightBoard(board, squares);
     }
 
     function update()
@@ -230,46 +263,12 @@
         return engine;
     }
 
-    function bitboardToArray(bitsets)
-    {
-        function getBits(integer) {
-            var bits = integer.toString(2);
-            bits += '0'.repeat(BIT_LENGTH - bits.length);
-            return bits;
-        }
-
-        var bits = getBits(bitsets[0]) + getBits(bitsets[1]),
-            arr = [];
-
-        for (var i = 0; i < bits.length; i++) {
-            if (bits[i] === "1") {
-                var x = i % 8;
-                var y = Math.ceil(i / 8);
-                arr.push([x, y]);
-                alert([x,y]);
-            }
-        }
-
-        return arr;
-    }
-
-    function highlightBoard(locs) {
-        for (var loc in locs) {
-            // board.highlight_square(loc[0], loc[1], "red");
-            // alert(loc);
-        }
-    }
-
     function init()
     {
         updateEngine();
         updateBoard();
 
         output = formatOutput();
-
-        var vals = [0,8388608];
-        bitboardToArray(vals);
-        // highlightBoard(array);
 
         json_output.appendChild(renderjson(output));
     }
