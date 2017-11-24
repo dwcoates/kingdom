@@ -24,6 +24,7 @@
         updateFen();
         updateBoard();
         updateJsonOutput();
+        alert("updated"); // test
     }
 
     function updateBoard()
@@ -35,7 +36,7 @@
 
     function updateFen()
     {
-        fen = document.getElementById('inputFen').value;
+        inputFen = document.getElementById('inputFen').value;
     }
 
     function updateJsonOutput()
