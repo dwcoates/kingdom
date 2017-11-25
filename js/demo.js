@@ -52,7 +52,11 @@
             }
         }
 
-        vals = [0,8388608]; // test
+        for (var x=0; x<8; x++) {
+            for (var y=0; y<8; y++)
+                board.remove_highlight(y, x);
+        }
+
         var squares = bitboardToArray(vals);
 
         highlightBoard(board, squares);
