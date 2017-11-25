@@ -321,6 +321,40 @@
         updateEngine();
         updateBoard();
 
+        renderjson.set_replacer(function(k,v) {
+            var obj_from_dom = function (el) {
+                if (el.nodeType == el.TEXT_NODE)
+                    return el.data;
+                var attributes="";
+                if (el.attributes)
+                    for (var i=0; i<el.attributes.length; i++)
+                        attributes += " "+el.attributes.item(i).name + "=\"" + el.attributes.item(i).value + "\"";
+                var obj = {};
+                obj["<"+el.tagName+attributes+">"] = Array.prototype.map.call(el.childNodes, obj_from_dom);
+                return obj;
+            };
+            if (v === window) return "<window>";
+            if (v === document) return "<document>";
+            if (typeof(v) == "number") {
+                //alert('buton')
+
+            }
+            if (Array.isArray(v)) {
+                var button = document.createElement("BUTTON")
+                button.setAttribute("id", v+k); // temp
+                button.innerHTML = k;
+                button.setAttribute("tagName", "button"); // temp
+                button.addEventListener("click", function()
+                                        {
+                                            decorateBoard(v);
+                                            updateBoard();
+                                        });
+                return button;
+            }
+            if (typeof(v) == "object" && v && "nodeType" in v) return obj_from_dom(v);
+            else return v;
+        });
+
         json_output.appendChild(renderjson(output));
 
         updateJsonOutput(); // temp
