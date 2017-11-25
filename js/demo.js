@@ -78,8 +78,6 @@
 
     function updateBoard()
     {
-        createBoard(board_el, inputFen);
-
         main.appendChild(board_el);
     }
 
@@ -317,12 +315,15 @@
 
     function init()
     {
+        output = formatOutput();
+        createBoard(board_el, inputFen);
+
         updateEngine();
         updateBoard();
 
-        output = formatOutput();
-
         json_output.appendChild(renderjson(output));
+
+        updateJsonOutput(); // temp
     }
     document.getElementById('buttonFen').addEventListener("click", update);
     document.addEventListener("DOMContentLoaded", init);
