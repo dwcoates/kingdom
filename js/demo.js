@@ -73,7 +73,24 @@
 
     function updateEngine()
     {
-        engine = load_engine();
+        function eval_pos()
+        {
+            // If we are in the middle of an eval, stop it and do the latest one.
+            if (engine.busy) {
+                engine.stop = true;
+                return engine.send("stop");
+            }
+
+            engine.stop = false;
+            engine.busy = true;
+
+            // simplified
+            engine.send("go depth " + eval_depth);
+        }
+
+        engine.send("position " + fen);
+
+        eval_pos();
     }
 
     function updateBoard()
@@ -118,7 +135,7 @@
                 var attributes="";
                 if (el.attributes)
                     for (var i=0; i<el.attributes.length; i++)
-        s                attributes += " "+el.attributes.item(i).name + "=\"" + el.attributes.item(i).value + "\"";
+                        attributes += " "+el.attributes.item(i).name + "=\"" + el.attributes.item(i).value + "\"";
                 var obj = {};
                 obj["<"+el.tagName+attributes+">"] = Array.prototype.map.call(el.childNodes, obj_from_dom);
                 return obj;
@@ -139,6 +156,7 @@
         var worker = new Worker("js/stockfish6.js"),
             engine = {started: Date.now()},
             que = [];
+        console.log("worker made");
 
         function get_first_word(line)
         {
@@ -308,6 +326,7 @@
     {
         output = formatOutput();
         createBoard(board_el, inputFen);
+        engine = load_engine();
 
         // JSON
         json_output.appendChild(renderjson.set_replacer(function(k,v) {
@@ -344,7 +363,12 @@
             else return v;
         })(output));
 
-        updateEngine();
+        // ENGINE
+        engine.send("uci", function onuci(str)
+                    {
+                        engine.send("isready");
+                    });
+
         updateBoard();
         updateJsonOutput();
     }
