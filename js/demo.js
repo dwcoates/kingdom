@@ -80,16 +80,12 @@
                 engine.stop = true;
                 return engine.send("stop");
             }
-
             engine.stop = false;
             engine.busy = true;
-
-            // simplified
             engine.send("go depth " + eval_depth);
         }
 
-        engine.send("position " + fen);
-
+        engine.send("position " + inputFen);
         eval_pos();
     }
 
@@ -119,36 +115,7 @@
     {
         output = formatOutput();
 
-        function replace_elements(k, v)
-        {
-            if (typeof(v) == "number") {
-                return  "<button type=\"button\" id=\"button" + k + "\">" + k + "</button>";
-                isFinite(v) ? v : v.toString(); // Capture NaNs and Infinity
-            }
-            return v;
-        }
-
-        renderjson.set_replacer(function(k,v) {
-            var obj_from_dom = function (el) {
-                if (el.nodeType == el.TEXT_NODE)
-                    return el.data;
-                var attributes="";
-                if (el.attributes)
-                    for (var i=0; i<el.attributes.length; i++)
-                        attributes += " "+el.attributes.item(i).name + "=\"" + el.attributes.item(i).value + "\"";
-                var obj = {};
-                obj["<"+el.tagName+attributes+">"] = Array.prototype.map.call(el.childNodes, obj_from_dom);
-                return obj;
-            };
-            if (v === window) return "<window>";
-            if (v === document) return "<document>";
-            if (typeof(v) == "number") return v; // Capture NaNs and Infinity
-            if (typeof(v) == "object" && v && "nodeType" in v) return obj_from_dom(v);
-            else return v;
-        });
-
         json_output.replaceChild(json_output.firstChild.value, renderjson(output)); // value?
-
     }
 
     function load_engine()
