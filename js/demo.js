@@ -37,8 +37,8 @@
 
             for (var i = 0; i < bits.length; i++) {
                 if (bits[i] === "1") {
-                    var x = i % 8;
-                    var y = Math.ceil(i / 8);
+                    var x = 7 - (i % 8);
+                    var y = 7 - Math.ceil(i / 8);
                     arr.push([x, y]);
                 }
             }
@@ -48,7 +48,7 @@
 
         function highlightBoard(board, locations) {
             for (var i = 0; i < locations.length; i++) {
-                board.highlight_square(locations[i][0], locations[i][1], "red");
+                board.highlight_square(locations[i][1], locations[i][0], "red"); // y, x
             }
         }
 
@@ -78,6 +78,8 @@
 
     function updateBoard()
     {
+
+
         main.appendChild(board_el);
     }
 
@@ -102,15 +104,6 @@
 
         function replace_elements(k, v)
         {
-            // var attributes="";
-            // if (el.attributes)
-            //     for (var i=0; i<el.attributes.length; i++)
-            //         attributes += " "+el.attributes.item(i).name + "=\"" + el.attributes.item(i).value + "\"";
-
-            // var obj = {};
-            // obj["<"+el.tagName+attributes+">"] = Array.prototype.map.call(el.childNodes, obj_from_dom);
-            // return obj;
-
             if (typeof(v) == "number") {
                 return  "<button type=\"button\" id=\"button" + k + "\">" + k + "</button>";
                 isFinite(v) ? v : v.toString(); // Capture NaNs and Infinity
@@ -318,10 +311,8 @@
         output = formatOutput();
         createBoard(board_el, inputFen);
 
-        updateEngine();
-        updateBoard();
-
-        renderjson.set_replacer(function(k,v) {
+        // JSON
+        json_output.appendChild(renderjson.set_replacer(function(k,v) {
             var obj_from_dom = function (el) {
                 if (el.nodeType == el.TEXT_NODE)
                     return el.data;
@@ -353,11 +344,11 @@
             }
             if (typeof(v) == "object" && v && "nodeType" in v) return obj_from_dom(v);
             else return v;
-        });
+        })(output));
 
-        json_output.appendChild(renderjson(output));
-
-        updateJsonOutput(); // temp
+        updateEngine();
+        updateBoard();
+        updateJsonOutput();
     }
     document.getElementById('buttonFen').addEventListener("click", update);
     document.addEventListener("DOMContentLoaded", init);
