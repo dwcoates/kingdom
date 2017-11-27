@@ -6,13 +6,13 @@
     var board_el = document.createElement("div");
     var board;
     var json_output = document.getElementById("dest");
+    var eval_depth = 12;
     var BIT_LENGTH = 32;
     var engine;
     var output;
-
     var boardSize = 400;
-
     var inputFen = "r1bqkbnr/ppp2ppp/2np4/1B2p3/4P3/2N5/PPPP1PPP/R1BQK1NR b KQkq - 1 1";
+    var rendered;
 
     function createBoard(el, fen)
     {
@@ -115,7 +115,9 @@
     {
         output = formatOutput();
 
-        json_output.replaceChild(json_output.firstChild.value, renderjson(output)); // value?
+        rendered = renderjson(output);
+
+        json_output.appendChild(json_output.firstChild, rendered);
     }
 
     function load_engine()
