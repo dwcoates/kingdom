@@ -68,7 +68,6 @@
         updateEngine();
         updateBoard();
         updateJsonOutput();
-        alert("updated"); // test
     }
 
     function updateEngine()
@@ -92,8 +91,6 @@
     function updateBoard()
     {
 
-
-        main.appendChild(board_el);
     }
 
     function updateFen()
@@ -117,7 +114,7 @@
 
         rendered = renderjson(output);
 
-        json_output.appendChild(json_output.firstChild, rendered);
+        json_output.appendChild(rendered);
     }
 
     function load_engine()
@@ -293,12 +290,14 @@
 
     function init()
     {
-        output = formatOutput();
         createBoard(board_el, inputFen);
+        main.appendChild(board_el);
+
+        output = formatOutput();
         engine = load_engine();
 
         // JSON
-        json_output.appendChild(renderjson.set_replacer(function(k,v) {
+        renderjson.set_replacer(function(k,v) {
             var obj_from_dom = function (el) {
                 if (el.nodeType == el.TEXT_NODE)
                     return el.data;
@@ -330,16 +329,13 @@
             }
             if (typeof(v) == "object" && v && "nodeType" in v) return obj_from_dom(v);
             else return v;
-        })(output));
+        });
 
         // ENGINE
         engine.send("uci", function onuci(str)
                     {
                         engine.send("isready");
                     });
-
-        updateBoard();
-        updateJsonOutput();
     }
     document.getElementById('buttonFen').addEventListener("click", update);
     document.addEventListener("DOMContentLoaded", init);
