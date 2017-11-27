@@ -8,8 +8,10 @@
     var json_output = document.getElementById("dest");
     var eval_depth = 12;
     var BIT_LENGTH = 32;
+    var recSettings = {NONE: 0, IDEAS : 1, ATTRIBUTES : 2, IDEAS_AND_ATTRIBUTES: 3}
     var engine;
     var output;
+    var eval_data = [];
     var boardSize = 400;
     var inputFen = "r1bqkbnr/ppp2ppp/2np4/1B2p3/4P3/2N5/PPPP1PPP/R1BQK1NR b KQkq - 1 1";
     var rendered;
@@ -74,17 +76,59 @@
     {
         function eval_pos()
         {
-            // If we are in the middle of an eval, stop it and do the latest one.
+
+            /// If we are in the middle of an eval, stop it and do the latest one.
             if (engine.busy) {
                 engine.stop = true;
                 return engine.send("stop");
             }
+
             engine.stop = false;
             engine.busy = true;
-            engine.send("go depth " + eval_depth);
+
+            eval_data = [];
+
+            engine.send("position " + inputFen);
+            engine.send("setoption name Record value " + recSettings.IDEAS_AND_ATTRIBUTES);
+            engine.send("go depth " + eval_depth, function ongo(str)
+                        {
+                            var matches = str.match(/^bestmove\s(\S+)(?:\sponder\s(\S+))?/);
+
+                            // rec best move matches[0]
+
+                            engine.busy = false;
+                            G.events.trigger("evaled", {ply: 0});
+                        }, function stream(str)
+                        {
+                            var matches = str.match(/depth (\d+) .*score (cp|mate) ([-\d]+) .*pv (.+)/),
+                                score,
+                                type,
+                                depth,
+                                pv,
+                                data;
+
+                            if (matches) {
+                                depth = Number(matches[1]);
+                                type = matches[2];
+                                score = Number(matches[3]);
+                                pv = matches[4].split(" ");
+
+                                data = {score: score, type: type, depth: depth, pv: pv};
+                            } else {
+                                if (/score mate 0\b/.test(str)) {
+                                    data = {score: 0, type: "mate", depth: 0};
+                                }
+                            }
+
+                            if (data) {
+                                data.ply = 0;
+                                data.turn = 0;
+                                eval_data.push(data);
+                            }
+                        });
+            //engine.send("fetch json search", function ongo(str) { return; }, formatOutput);
         }
 
-        engine.send("position " + inputFen);
         eval_pos();
     }
 
