@@ -13,7 +13,7 @@
     var output;
     var eval_data = [];
     var boardSize = 400;
-    var inputFen = "r1bqkbnr/ppp2ppp/2np4/1B2p3/4P3/2N5/PPPP1PPP/R1BQK1NR b KQkq - 1 1";
+    var inputFen = "5rkn/1K4p1/8/2p5/3B4/4p3/8/8 b - - 0 1";
 
     function createBoard(el, fen)
     {
@@ -142,7 +142,10 @@
 
     function updateFen()
     {
-        inputFen = document.getElementById('inputFen').value;
+        var newFen = document.getElementById('inputFen').value;
+        if (newFen !== "") {
+            inputFen = newFen;
+        }
     }
 
     function formatOutput(str)
