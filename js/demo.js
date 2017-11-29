@@ -14,7 +14,7 @@
     var eval_data = [];
     var boardSize = 400;
     var inputFen = "5rkn/1K4p1/8/2p5/3B4/4p3/8/8 b - - 0 1";
-    var jsonRaw="";
+    var jsonRaw=[];
 
     function createBoard(el, fen)
     {
@@ -122,7 +122,7 @@
                                 score = Number(matches[3]);
                                 pv = matches[4].split(" ");
 
-                                data = {score: score, type: type, depth: depth, pv: pv};
+                                data = {score: score, type: type, depth: depth, pv: pv} ;
                             } else {
                                 if (/score mate 0\b/.test(str)) {
                                     data = {score: 0, type: "mate", depth: 0};
@@ -137,12 +137,12 @@
                         });
         }
 
-        //eval_pos();
+        eval_pos();
 
-        engine.send("fetch", formatOutput, function (line)
+        engine.send("fetch json search", formatOutput, function (line)
                     {
-                        jsonRaw += line;
-                    }); // fetch search
+                        jsonRaw.push(line);
+                    });
     }
 
     function updateBoard()
@@ -162,7 +162,8 @@
     function formatOutput(str)
     {
         // temp
-        console.log('format output');
+        console.log(str.substr(0,10) + " . . . " + str.substr(str.length-11, str.length-10));
+
         output = renderjson(JSON.parse(str));
         json_output.appendChild(output);
     }
@@ -203,6 +204,8 @@
                 cmd_type = "isready";
             } else if (first_word === "bestmove" || first_word === "info") {
                 cmd_type = "go";
+            } else if (first_word === "assess") {
+                cmd_type = "fetch";
             } else {
                 /// eval and d are more difficult.
                 cmd_type = "other";
@@ -212,7 +215,7 @@
 
             for (i = 0; i < len; i += 1) {
                 cmd_first_word = get_first_word(que[i].cmd);
-                if (cmd_first_word === cmd_type || (cmd_type === "other" && (cmd_first_word === "d" || cmd_first_word === "eval"))) {
+                if (cmd_first_word === cmd_type || (cmd_type === "other" && (cmd_first_word === "d" || cmd_first_word === "eval" || cmd_first_word === "fetch"))) {
                     return i;
                 }
             }
@@ -272,12 +275,11 @@
                 done = true;
                 /// All "go" needs is the last line (use stream to get more)
                 my_que.message = line;
-            } else if (line === "***ASSESSMENT END***") {
+            } else if (line.indexOf("***ASSESSMENT END***") !== -1) {
                 // json
                 done = true;
-                alert('got it');
                 engine.ready = true;
-                my_que.message = line;
+                my_que.message = jsonRaw.slice(0, jsonRaw.length-1).join();
             } else if (my_que.cmd === "d" && line.substr(0, 15) === "Legal uci moves") {
                 done = true;
             } else if (my_que.cmd === "eval" && /Total Evaluation[\s\S]+\n$/.test(my_que.message)) {
