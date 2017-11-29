@@ -33,13 +33,22 @@
                 return bits;
             }
 
-            var bits = getBits(bitsets[0]) + getBits(bitsets[1]),
-                arr = [];
+            // var bits = getBits(bitsets[0]) + getBits(bitsets[1]),
+            var arr = [];
 
-            for (var i = 0; i < bits.length; i++) {
-                if (bits[i] === "1") {
+            // for (var i = 0; i < bits.length; i++) {
+            //     if (bits[i] === "1") {
+            //         var x = 7 - (i % 8);
+            //         var y = 7 - Math.ceil(i / 8);
+            //         arr.push([x, y]);
+            //     }
+            // }
+
+            for (var i = 0; i < vals.length; i++) {
+                if (vals[i] === "1") {
                     var x = 7 - (i % 8);
                     var y = 7 - Math.ceil(i / 8);
+                    console.log(x + "," + y + ":" + vals);
                     arr.push([x, y]);
                 }
             }
