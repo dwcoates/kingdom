@@ -21,7 +21,7 @@
     {
         board = BOARD(el);
         board.size_board(boardSize, boardSize);
-        board.set_board(fen);
+        board.set_board(fen !== "startpos" ? fen : null);
         board.wait();
     }
 
@@ -109,7 +109,9 @@
 
     function get_pos_cmd()
     {
-        return "position fen " + inputFenStr;
+        var str = "position " + (inputFenStr === "startpos" ? "" : "fen ") + inputFenStr;
+
+        alert (str);
     }
 
     function updateEngine()
