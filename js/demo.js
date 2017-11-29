@@ -14,6 +14,7 @@
     var eval_data = [];
     var boardSize = 400;
     var inputFen = "5rkn/1K4p1/8/2p5/3B4/4p3/8/8 b - - 0 1";
+    var jsonRaw="";
 
     function createBoard(el, fen)
     {
@@ -134,13 +135,14 @@
                                 eval_data.push(data);
                             }
                         });
-
-            // engine.send("fetch json search",
-            //             formatOutput
-            //            );
         }
 
-        eval_pos();
+        //eval_pos();
+
+        engine.send("fetch", formatOutput, function (line)
+                    {
+                        jsonRaw += line;
+                    }); // fetch search
     }
 
     function updateBoard()
@@ -160,7 +162,7 @@
     function formatOutput(str)
     {
         // temp
-        // str = '{"WHITE":{"Board":{"PIECES":{"B7":null,"D4":{"xray2 (d->e)":"1000000000000000000000000000000000000000000000000000000000000000","pawns on same color":"0000000000000000000000000001010000000000000000000000000000000000","valid fork":"0000000000000000000000000000010000000000000100000000000000000000","reachable outposts":"0000000000000000000000000001010000000000000000000000000000000000","attacked king squares":"0000000000000000000000000000000000000000000000000000000000000000","attacked squares":"0000000001000000001000000001010000000000000101000000001000000001","partially attacked squares":"0000000001000000001000000001010000000000000101000000001000000001"}}},"Scores":{"PIECES":{"B7":{"close enemies":0,"king safety":0},"D4":{"interferring pawns":0,"reachable outpost":0,"mobility":58}},"TRACE":{"Imbalance":{"imbalance":-25},"Imbalance":{"imbalance":-25},"Mobility":{"mobility":58},"Threat":{"threat by pawn push":0,"hanging threats":54,"threat by weak minor":33},"Passed":null,"Space":null,"Total":null}}},"WHITE":{"Board":{"PIECES":{"B7":null,"D4":{"xray2 (d->e)":"1000000000000000000000000000000000000000000000000000000000000000","pawns on same color":"0000000000000000000000000001010000000000000000000000000000000000","valid fork":"0000000000000000000000000000010000000000000100000000000000000000","reachable outposts":"0000000000000000000000000001010000000000000000000000000000000000","attacked king squares":"0000000000000000000000000000000000000000000000000000000000000000","attacked squares":"0000000001000000001000000001010000000000000101000000001000000001","partially attacked squares":"0000000001000000001000000001010000000000000101000000001000000001"}}},"Scores":{"PIECES":{"B7":{"close enemies":0,"king safety":0},"D4":{"interferring pawns":0,"reachable outpost":0,"mobility":58}},"TRACE":{"Imbalance":{"imbalance":-25},"Imbalance":{"imbalance":-25},"Mobility":{"mobility":58},"Threat":{"threat by pawn push":0,"hanging threats":54,"threat by weak minor":33},"Passed":null,"Space":null,"Total":null}}},"BLACK":{"Board":{"PIECES":{"G8":null,"E3":null,"C5":null,"G7":null,"F8":{"xray3 (a->f)":"1000000000000000000000000000000000000000000000000000000000000000","on open file":"0000000000000000000000000000000000000000000000000000000000100000","attacked king squares":"0000000000000000000000000000000000000000000000000000000000000000","attacked squares":"0101111100100000001000000010000000100000001000000010000000100000","partially attacked squares":"0101111100100000001000000010000000100000001000000010000000100000"},"H8":{"reachable outposts":"0000000000000000000000000000000000000000000000000000000000000000","attacked king squares":"0000000000000000000000000000000000000000000000000000000000000000","trapped":"0000000000000000000000000000000000000000000000000000000000000000","attacked squares":"0000000000100000010000000000000000000000000000000000000000000000","partially attacked squares":"0000000000100000010000000000000000000000000000000000000000000000"}}},"Scores":{"PIECES":{"G8":{"close enemies":0,"king safety":-16},"F8":{"open file":20,"mobility":165},"H8":{"mobility":-26},"E3":{"isolated":40},"C5":{"isolated":40},"G7":{"isolated":40}},"TRACE":{"Imbalance":null,"Imbalance":null,"Mobility":{"mobility":139},"Threat":{"threat by pawn push":0,"hanging threats":27,"hanging pawn threat":61},"Passed":{"passed file":10,"passed":7,"hinder passed":0},"Space":null,"Total":null}}}}'
+        console.log('format output');
         output = renderjson(JSON.parse(str));
         json_output.appendChild(output);
     }
@@ -270,9 +272,10 @@
                 done = true;
                 /// All "go" needs is the last line (use stream to get more)
                 my_que.message = line;
-            } else if (line.match(/{(.*)}$/)) {
+            } else if (line === "***ASSESSMENT END***") {
                 // json
                 done = true;
+                alert('got it');
                 engine.ready = true;
                 my_que.message = line;
             } else if (my_que.cmd === "d" && line.substr(0, 15) === "Legal uci moves") {
