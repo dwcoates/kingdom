@@ -78,10 +78,30 @@
 
     function update()
     {
-        updateFen();
+        updateData();
         updateEngine();
         updateBoard();
         updateJsonOutput();
+    }
+
+    function updateData()
+    {
+        function updateDepth()
+        {
+            var newDepth = document.getElementById('inputFen').value;
+            eval_depth = newDepth;
+        }
+
+        function updateFen()
+        {
+            var newFen = document.getElementById('inputFen').value;
+            if (newFen !== "") {
+                inputFenStr = newFen;
+            }
+        }
+
+        updateFen();
+        updateDepth();
     }
 
     function get_pos_cmd()
@@ -160,14 +180,6 @@
         createBoard(board_el, inputFenStr);
         if (cb) cb();
         main.appendChild(board_el);
-    }
-
-    function updateFen()
-    {
-        var newFen = document.getElementById('inputFen').value;
-        if (newFen !== "") {
-            inputFenStr = newFen;
-        }
     }
 
     function formatOutput(str)

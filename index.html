@@ -7,6 +7,18 @@
   </head>
   <body>
     <input type="text" id="inputFen">
+    <input type='text' onkeypress='validate(evt)' style="width:42px;" id="searchDepth">
+    <script>
+      <!-- restrict to integers -->
+      function validate(evt) {
+          var theEvent = evt || window.event;
+          var key = theEvent.keyCode || theEvent.which;
+          if ((key < 48 || key > 57) && !(key == 8 || key == 9 || key == 13) ) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+          }
+      }
+    </script>
     <button type="button" id="buttonFen">Go!</button>
     <h2>BOARD</h2>
     <div id=main></div>
