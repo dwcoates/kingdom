@@ -8,6 +8,7 @@
     var json_output = document.getElementById("dest");
     var eval_depth = 12;
     var BIT_LENGTH = 32;
+    var ASSESS_TAG = "assess "
     var recSettings = {NONE: 0, IDEAS : 1, ATTRIBUTES : 2, IDEAS_AND_ATTRIBUTES: 3}
     var engine;
     var output;
@@ -111,7 +112,7 @@
                             // fetch
                             engine.send("fetch json search", formatOutput, function (line)
                                         {
-                                            jsonRaw.push(line.substr(6,));
+                                            jsonRaw.push(line.substring(ASSESS_TAG.length));
                                         });
                         }, function stream(str)
                         {
@@ -164,7 +165,7 @@
     function formatOutput(str)
     {
         // temp
-        str = jsonRaw.slice(0, jsonRaw.length-1).join();
+        str = jsonRaw.slice(0, jsonRaw.length-1).join("");
         output = renderjson(JSON.parse(str));
         json_output.appendChild(output);
     }
