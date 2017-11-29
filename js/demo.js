@@ -107,6 +107,12 @@
 
                             engine.busy = false;
                             G.events.trigger("evaled", {ply: 0});
+
+                            // fetch
+                            engine.send("fetch json search", formatOutput, function (line)
+                                        {
+                                            jsonRaw.push(line.substr(6,));
+                                        });
                         }, function stream(str)
                         {
                             var matches = str.match(/depth (\d+) .*score (cp|mate) ([-\d]+) .*pv (.+)/),
@@ -134,15 +140,11 @@
                                 data.turn = 0;
                                 eval_data.push(data);
                             }
-                        });
+                        }
+                       );
         }
 
         eval_pos();
-
-        engine.send("fetch json search", formatOutput, function (line)
-                    {
-                        jsonRaw.push(line);
-                    });
     }
 
     function updateBoard()
@@ -162,8 +164,7 @@
     function formatOutput(str)
     {
         // temp
-        console.log(str.substr(0,10) + " . . . " + str.substr(str.length-11, str.length-10));
-
+        str = jsonRaw.slice(0, jsonRaw.length-1).join();
         output = renderjson(JSON.parse(str));
         json_output.appendChild(output);
     }
@@ -204,7 +205,7 @@
                 cmd_type = "isready";
             } else if (first_word === "bestmove" || first_word === "info") {
                 cmd_type = "go";
-            } else if (first_word === "assess") {
+            } else if (first_word === "assess" || line === "***ASSESSMENT END***") {
                 cmd_type = "fetch";
             } else {
                 /// eval and d are more difficult.
