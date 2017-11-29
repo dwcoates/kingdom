@@ -14,7 +14,7 @@
     var output;
     var eval_data = [];
     var boardSize = 400;
-    var inputFen = "5rkn/1K4p1/8/2p5/3B4/4p3/8/8 b - - 0 1";
+    var inputFenStr = "5rkn/1K4p1/8/2p5/3B4/4p3/8/8 b - - 0 1";
     var jsonRaw=[];
 
     function createBoard(el, fen)
@@ -84,6 +84,11 @@
         updateJsonOutput();
     }
 
+    function get_pos_cmd()
+    {
+        return "position fen " + inputFenStr;
+    }
+
     function updateEngine()
     {
         function eval_pos()
@@ -100,7 +105,7 @@
 
             eval_data = [];
 
-            engine.send("position " + inputFen);
+            engine.send(get_pos_cmd());
             engine.send("setoption name Record value " + recSettings.IDEAS_AND_ATTRIBUTES);
             engine.send("go depth " + eval_depth, function ongo(str)
                         {
@@ -152,7 +157,7 @@
 
     function updateBoard(cb)
     {
-        createBoard(board_el, inputFen);
+        createBoard(board_el, inputFenStr);
         if (cb) cb();
         main.appendChild(board_el);
     }
@@ -161,7 +166,7 @@
     {
         var newFen = document.getElementById('inputFen').value;
         if (newFen !== "") {
-            inputFen = newFen;
+            inputFenStr = newFen;
         }
     }
 
@@ -357,7 +362,7 @@
 
     function init()
     {
-        createBoard(board_el, inputFen);
+        createBoard(board_el, inputFenStr);
         main.appendChild(board_el);
 
         engine = load_engine();
