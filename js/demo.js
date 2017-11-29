@@ -62,7 +62,7 @@
 
         function highlightBoard(board, locations) {
             for (var i = 0; i < locations.length; i++) {
-                board.highlight_square(locations[i][1], locations[i][0], "red"); // y, x
+                board.highlight_square(locations[i][1], locations[i][0], "red"); // highlight_square(y, x)
             }
         }
 
