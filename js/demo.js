@@ -270,10 +270,10 @@
                 done = true;
                 /// All "go" needs is the last line (use stream to get more)
                 my_que.message = line;
-            } else if (line.match("/{(.*)}/$")) {
+            } else if (line.match(/{(.*)}$/)) {
                 // json
                 done = true;
-                console.log("over here");
+                engine.ready = true;
                 my_que.message = line;
             } else if (my_que.cmd === "d" && line.substr(0, 15) === "Legal uci moves") {
                 done = true;
@@ -402,7 +402,10 @@
         // ENGINE
         engine.send("uci", function onuci(str)
                     {
-                        engine.send("isready");
+                        engine.send("isready", function onuci(str)
+                                   {
+                                       engine.send("setoption name Record value 3");
+                                   });
                     });
     }
     document.getElementById('buttonFen').addEventListener("click", update);
