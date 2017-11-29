@@ -372,6 +372,18 @@
 
             }
             if (Array.isArray(v)) {
+                // var button = document.createElement("BUTTON")
+                // button.setAttribute("id", v+k); // temp
+                // button.innerHTML = k;
+                // button.setAttribute("tagName", "button"); // temp
+                // button.addEventListener("click", function()
+                //                         {
+                //                             decorateBoard(v);
+                //                             updateBoard();
+                //                         });
+                // return button;
+            }
+            if (typeof(v) == "string" && /^[01]+$/.test(v)) {
                 var button = document.createElement("BUTTON")
                 button.setAttribute("id", v+k); // temp
                 button.innerHTML = k;
