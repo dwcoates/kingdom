@@ -88,8 +88,11 @@
     {
         function updateDepth()
         {
-            var newDepth = document.getElementById('inputFen').value;
-            eval_depth = newDepth;
+            var newDepth = document.getElementById('searchDepth').value;
+            if (newDepth !== "") {
+                newDepth = parseInt(newDepth);
+                eval_depth = newDepth;
+            }
         }
 
         function updateFen()
