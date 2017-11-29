@@ -130,8 +130,8 @@
 
             eval_data = [];
 
+            engine.send("ucinewgame");
             engine.send(get_pos_cmd());
-            engine.send("setoption name Record value " + recSettings.IDEAS_AND_ATTRIBUTES);
             engine.send("go depth " + eval_depth, function ongo(str)
                         {
                             var matches = str.match(/^bestmove\s(\S+)(?:\sponder\s(\S+))?/);
