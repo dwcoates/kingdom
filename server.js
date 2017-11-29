@@ -72,7 +72,7 @@ http.createServer(function (request, response)
         
         /// If the URI is a directory, try to load index.html.
         if (fs.statSync(filename).isDirectory()) {
-            filename += "/demo.html";
+            filename += "/index.html";
         }
         
         fs.readFile(filename, "binary", function (err, file)
