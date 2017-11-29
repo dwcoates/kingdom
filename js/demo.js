@@ -148,9 +148,10 @@
         eval_pos();
     }
 
-    function updateBoard()
+    function updateBoard(cb)
     {
         createBoard(board_el, inputFen);
+        if (cb) cb();
         main.appendChild(board_el);
     }
 
@@ -172,7 +173,7 @@
 
     function updateJsonOutput()
     {
-        //
+        // no implement
     }
 
     function load_engine()
