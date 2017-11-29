@@ -399,7 +399,6 @@
                 button.addEventListener("click", function()
                                         {
                                             decorateBoard(v);
-                                            updateBoard();
                                         });
                 return button;
             }
