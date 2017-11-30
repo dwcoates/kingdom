@@ -210,6 +210,10 @@
         moveData=[];
         var objs = JSON.parse(str);
 
+        while (json_el.firstChild) {
+            json_el.removeChild(json_el.firstChild);
+        }
+
         for (var obj in objs) {
             var i = moveData.length,
                 div = document.createElement("div"),
