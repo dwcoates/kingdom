@@ -8,6 +8,7 @@
     var BIT_LENGTH = 32;
     var ASSESS_TAG = "assess ";
     var REC_SETTINGS = {NONE: 0, IDEAS : 1, ATTRIBUTES : 2, IDEAS_AND_ATTRIBUTES: 3};
+    var JSON_SHOW_LEVEL = 6;
     var board;
     var boardSize = 400;
     var engine;
@@ -466,7 +467,7 @@
             if (typeof(v) == "object" && v && "nodeType" in v) return obj_from_dom(v);
             else return v;
         });
-        renderjson.set_show_to_level(3);
+        renderjson.set_show_to_level(JSON_SHOW_LEVEL);
 
         // ENGINE
         engine.send("uci", function onuci(str)
