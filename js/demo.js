@@ -110,8 +110,6 @@
     function get_pos_cmd()
     {
         var str = "position " + (inputFenStr === "startpos" ? "" : "fen ") + inputFenStr;
-
-        alert (str);
     }
 
     function updateEngine()
@@ -400,7 +398,6 @@
             if (v === window) return "<window>";
             if (v === document) return "<document>";
             if (typeof(v) == "number") {
-                //alert('buton')
 
             }
             if (Array.isArray(v)) {
@@ -440,6 +437,18 @@
                                    });
                     });
     }
+
     document.getElementById('buttonFen').addEventListener("click", update);
+    document.getElementById('searchDepth').addEventListener("keypress", function (evt)
+                                                          {
+                                                              var theEvent = evt || window.event;
+                                                              var key = theEvent.keyCode || theEvent.which;
+                                                              if ((key < 48 || key > 57) &&
+                                                                  !(key == 8 || key == 9 || key == 13) ) {
+                                                                  theEvent.returnValue = false;
+                                                                  if (theEvent.preventDefault) theEvent.preventDefault();
+                                                              }
+                                                          }
+                                                           );
     document.addEventListener("DOMContentLoaded", init);
 }());
