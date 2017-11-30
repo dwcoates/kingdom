@@ -18,6 +18,9 @@
     var jsonRaw=[];
     var moveData=[];
 
+    // testing flags
+    var TEST_BITMAPS=false;
+
     function createBoard(el, fen)
     {
         board = BOARD(el);
