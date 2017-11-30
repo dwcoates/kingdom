@@ -14,7 +14,7 @@
     var engine;
     var eval_depth = 12;
     var eval_data = [];
-    var inputFenStr = "5rkn/1K4p1/8/2p5/3B4/4p3/8/8 b - - 0 1";
+    var inputFenStr = "r2qkb1r/pp1n1ppp/2pp1n2/3Pp2b/1PP1P3/2NB1P2/P3N1PP/R1BQ1RK1 b kq - 2 10";
     var jsonRaw=[];
     var moveData=[];
 
@@ -471,6 +471,7 @@
             else return v;
         });
         renderjson.set_show_to_level(JSON_SHOW_LEVEL);
+        renderjson.ignore_null(true);
 
         // ENGINE
         engine.send("uci", function onuci(str)
