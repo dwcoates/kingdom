@@ -197,7 +197,16 @@
     }
 
     function showMove(move) {
+        function square_to_pair(sq) {
+            var file = sq.charCodeAt(0)-65,
+                rank = parseInt(sq[1])-1;
+            return {file : file, rank : rank};
+        }
 
+
+        var from = square_to_pair(move.substr(0,2)),
+            to = square_to_pair(move.substr(1,2));
+        board.arrow_manager.draw(from.rank, from.file, to.rank, to.file, board.color_values[board.highlight_colors.indexOf("red")]);
     }
 
     function formatOutput(str)
@@ -218,6 +227,7 @@
             button.addEventListener("click", function()
                                     {
                                         // showJson(obj);
+                                        alert('showing');
                                         showMove(obj);
                                     });
 
