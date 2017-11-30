@@ -187,8 +187,6 @@
 
     function formatOutput(str)
     {
-        // temp
-        str = jsonRaw.slice(0, jsonRaw.length-1).join("");
         output = renderjson(JSON.parse(str));
         json_output.appendChild(output);
     }
@@ -304,7 +302,7 @@
                 // json
                 done = true;
                 engine.ready = true;
-                my_que.message = jsonRaw.slice(0, jsonRaw.length-1).join();
+                my_que.message = jsonRaw.slice(0, jsonRaw.length-1).join("");
             } else if (my_que.cmd === "d" && line.substr(0, 15) === "Legal uci moves") {
                 done = true;
             } else if (my_que.cmd === "eval" && /Total Evaluation[\s\S]+\n$/.test(my_que.message)) {
