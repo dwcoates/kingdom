@@ -16,6 +16,7 @@
     var boardSize = 400;
     var inputFenStr = "5rkn/1K4p1/8/2p5/3B4/4p3/8/8 b - - 0 1";
     var jsonRaw=[];
+    var moveData=[];
 
     function createBoard(el, fen)
     {
@@ -185,10 +186,47 @@
         main.appendChild(board_el);
     }
 
+    function showJson(move) {
+        for (var m in moveData) {
+            if (moveData[move].style.display === "none") {
+                moveData[move].style.display = "block";
+            } else {
+                moveData[move].style.display = "none";
+            }
+        }
+    }
+
+    function showMove(move) {
+
+    }
+
     function formatOutput(str)
     {
-        output = renderjson(JSON.parse(str));
-        json_output.appendChild(output);
+        moveData=[];
+        var objs = JSON.parse(str);
+
+        for (var obj in objs) {
+            var i = moveData.length,
+                div = document.createElement("div"),
+                button = document.createElement("BUTTON");
+
+            moveData[obj] = renderjson(objs[obj]);
+
+            button.setAttribute("id", obj); // not unique id
+            button.innerHTML = obj;
+            button.setAttribute("tagName", "button"); // ?
+            button.addEventListener("click", function()
+                                    {
+                                        // showJson(obj);
+                                        showMove(obj);
+                                    });
+
+
+            div.appendChild(button);
+            div.appendChild(moveData[obj]);
+
+            json_output.appendChild(div);
+        }
     }
 
     function updateJsonOutput()
@@ -398,33 +436,29 @@
             if (typeof(v) == "number") {
 
             }
-            if (Array.isArray(v)) {
-                // var button = document.createElement("BUTTON")
-                // button.setAttribute("id", v+k); // temp
-                // button.innerHTML = k;
-                // button.setAttribute("tagName", "button"); // temp
-                // button.addEventListener("click", function()
-                //                         {
-                //                             decorateBoard(v);
-                //                             updateBoard();
-                //                         });
-                // return button;
-            }
-            if (typeof(v) == "string" && /^[01]+$/.test(v)) {
-                var button = document.createElement("BUTTON")
-                button.setAttribute("id", v+k); // temp
-                button.innerHTML = k;
-                button.setAttribute("tagName", "button"); // temp
-                button.addEventListener("click", function()
-                                        {
-                                            console.log(v);
-                                            decorateBoard(v);
-                                        });
-                return button;
+            if (typeof(v) == "string") {
+                // binary string
+                if (/^[01]+$/.test(v)) {
+                    var button = document.createElement("BUTTON")
+                    button.setAttribute("id", v+k); // temp
+                    button.innerHTML = k;
+                    button.setAttribute("tagName", "button"); // temp
+                    button.addEventListener("click", function()
+                                            {
+                                                console.log(v);
+                                                decorateBoard(v);
+                                            });
+                    return button;
+                }
+                // move
+                if (/([A-Z][0-9][A-Z][0-9])/.test(v)) {
+                    alert('move');
+                }
             }
             if (typeof(v) == "object" && v && "nodeType" in v) return obj_from_dom(v);
             else return v;
         });
+        renderjson.set_show_to_level(3);
 
         // ENGINE
         engine.send("uci", function onuci(str)
