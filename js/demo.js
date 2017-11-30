@@ -4,16 +4,15 @@
     
     var main = document.getElementById("main");
     var board_el = document.createElement("div");
-    var board;
-    var json_output = document.getElementById("dest");
-    var eval_depth = 12;
+    var json_el = document.getElementById("dest");
     var BIT_LENGTH = 32;
-    var ASSESS_TAG = "assess "
-    var recSettings = {NONE: 0, IDEAS : 1, ATTRIBUTES : 2, IDEAS_AND_ATTRIBUTES: 3}
-    var engine;
-    var output;
-    var eval_data = [];
+    var ASSESS_TAG = "assess ";
+    var REC_SETTINGS = {NONE: 0, IDEAS : 1, ATTRIBUTES : 2, IDEAS_AND_ATTRIBUTES: 3};
+    var board;
     var boardSize = 400;
+    var engine;
+    var eval_depth = 12;
+    var eval_data = [];
     var inputFenStr = "5rkn/1K4p1/8/2p5/3B4/4p3/8/8 b - - 0 1";
     var jsonRaw=[];
     var moveData=[];
@@ -128,14 +127,13 @@
             engine.busy = true;
 
             eval_data = [];
+            jsonRaw = [];
 
             engine.send("ucinewgame");
             engine.send(get_pos_cmd());
             engine.send("go depth " + eval_depth, function ongo(str)
                         {
                             var matches = str.match(/^bestmove\s(\S+)(?:\sponder\s(\S+))?/);
-
-                            // rec best move matches[0]
 
                             engine.busy = false;
                             G.events.trigger("evaled", {ply: 0});
@@ -232,7 +230,7 @@
             div.appendChild(button);
             div.appendChild(moveData[obj]);
 
-            json_output.appendChild(div);
+            json_el.appendChild(div);
         }
     }
 
