@@ -39,9 +39,9 @@
             if (typeof(bitsets) == "string") {
                 for (var i = 0; i < bitsets.length; i++) {
                     if (bitsets[i] === "1") {
-                        var x = 7 - (i % 8);
-                        var y = 7 - Math.ceil(i / 8);
-                        arr.push([x, y]);
+                        var file = 7 - (i % 8);
+                        var rank = 7 - Math.floor(i / 8);
+                        arr.push([file, rank]);
                     }
                 }
             // partitioned 64-bit integer representation of bitboard
@@ -453,7 +453,7 @@
                 if (/^[01]+$/.test(v)) {
                     var button = document.createElement("BUTTON")
                     button.setAttribute("id", v+k); // temp
-                    button.innerHTML = k;
+                    button.innerHTML = TEST_BITMAPS ? v : k;
                     button.setAttribute("tagName", "button"); // temp
                     button.addEventListener("click", function()
                                             {
