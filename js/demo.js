@@ -109,14 +109,13 @@
 
     function get_pos_cmd()
     {
-        var str = "position " + (inputFenStr === "startpos" ? "" : "fen ") + inputFenStr;
+        return "position " + (inputFenStr === "startpos" ? "" : "fen ") + inputFenStr;
     }
 
     function updateEngine()
     {
         function eval_pos()
         {
-
             /// If we are in the middle of an eval, stop it and do the latest one.
             if (engine.busy) {
                 engine.stop = true;
