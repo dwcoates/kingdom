@@ -203,9 +203,8 @@
             return {file : file, rank : rank};
         }
 
-
         var from = square_to_pair(move.substr(0,2)),
-            to = square_to_pair(move.substr(1,2));
+            to = square_to_pair(move.substr(2,2));
         board.arrow_manager.draw(from.rank, from.file, to.rank, to.file, board.color_values[board.highlight_colors.indexOf("red")]);
     }
 
