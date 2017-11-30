@@ -225,8 +225,6 @@
             button.setAttribute("tagName", "button"); // ?
             button.addEventListener("click", function()
                                     {
-                                        // showJson(obj);
-                                        alert('showing');
                                         showMove(obj);
                                     });
 
