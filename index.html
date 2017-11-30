@@ -6,20 +6,27 @@
     <link rel=stylesheet href="css/board.css">
   </head>
   <body>
-    <input type="text" id="inputFen">
-    <input type='text' onkeypress='validate(evt)' style="width:42px;" id="searchDepth">
-    <script>
-      <!-- restrict to integers -->
-      function validate(evt) {
-          var theEvent = evt || window.event;
-          var key = theEvent.keyCode || theEvent.which;
-          if ((key < 48 || key > 57) && !(key == 8 || key == 9 || key == 13) ) {
-            theEvent.returnValue = false;
-            if (theEvent.preventDefault) theEvent.preventDefault();
-          }
+    <style>
+      <!-- input, label { -->
+      <!--     display:block; -->
+      <!-- } -->
+      form fieldset button {
+      clear: left;
       }
-    </script>
-    <button type="button" id="buttonFen">Go!</button>
+    </style>
+    <form>
+      <fieldset>
+      <div style="float:left;margin-right:20px;">
+        <label for="inputFen">Fen</label>
+        <input type="text" id="inputFen" name="inputFen">
+      </div>
+      <div style="float:left;">
+        <label for="depth">Depth</label>
+        <input type='text' style="width:42px;" id="searchDepth" name="depth">
+      </div>
+      <button type="button" id="buttonFen">Go!</button>
+      </fieldset>
+    </form>
     <h2>BOARD</h2>
     <div id=main></div>
     <h2>JSON</h2>
