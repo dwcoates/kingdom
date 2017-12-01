@@ -13,6 +13,29 @@
               user-select: none;
 }
 
+
+ul {
+    list-style-type: none;
+    padding: 5;
+    display: inline-block;
+}
+li {
+    .list-item {
+        float: left;
+        clear: left;
+    }
+    display: inline;
+}
+
+.wrapper .view {
+    -moz-border-radius:7px 7px 7px 7px;
+    border:1px solid silver;
+    float:left;
+    margin:10px;
+    min-height:100px;
+    padding:5px;
+}
+
 .mobile .chess_board {
     -webkit-transition: none;
             transition: none;

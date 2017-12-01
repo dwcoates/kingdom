@@ -6,31 +6,42 @@
     <link rel=stylesheet href="css/board.css">
   </head>
   <body>
-    <style>
-      <!-- input, label { -->
-      <!--     display:block; -->
-      <!-- } -->
-      form fieldset button {
-      clear: left;
-      }
-    </style>
     <form>
       <fieldset>
-      <div style="float:left;margin-right:20px;">
-        <label for="inputFen">Fen</label>
-        <input type="text" id="inputFen" name="inputFen">
-      </div>
-      <div style="float:left;">
-        <label for="depth">Depth</label>
-        <input type='text' style="width:42px;" id="searchDepth" name="depth">
-      </div>
-      <button type="button" id="buttonFen">Go!</button>
+        <ul>
+          <li>
+            <label for="inputFen">Fen</label>
+            <input type="text" id="inputFen" name="inputFen">
+          </li>
+          <li>
+            <label for="depth">Depth</label>
+            <input type='text' style="width:42px;" id="searchDepth" name="depth">
+          </li>
+          <li>
+            <button type="button" id="buttonFen">Go!</button>
+          </li>
+        </ul>
       </fieldset>
     </form>
-    <h2>BOARD</h2>
-    <div id=main></div>
-    <h2>JSON</h2>
-    <div id="dest"></div>
+    <ul>
+      <li>
+        <div class="wrapper">
+          <div class="view">
+            <h2>MOVE</h2>
+            <div id="currentMove"></div>
+          </div>
+          <div class="view">
+            <h2>BOARD</h2>
+            <div id=main></div>
+          </div>
+        </div>
+      </li>
+      <li>
+        <h2>JSON</h2>
+        <div id="dest"></div>
+      </li>
+    </ul>
+
   </body>
   <script src="js/girdle.js"></script>
   <script src="js/renderjson.js"></script>
