@@ -13,6 +13,8 @@
     var board;
     var pvMoves=[];
     var pvEvals;
+    var evalButtons=[];
+    var evalDivs=[];
     var boardSize = 400;
     var engine;
     var eval_depth = 12;
@@ -223,28 +225,34 @@
             json_el.removeChild(json_el.firstChild);
         }
 
+        evalButtons={};
+        evalDivs={};
+
         for (var move in pvMoves) {
             move = pvMoves[move];
-            var i = moveEvalData.length,
-                div = document.createElement("div"),
-                button = document.createElement("BUTTON");
+
+            evalButtons[move] = document.createElement("BUTTON");
+            evalDivs[move] = document.createElement("div");
+
+            var i = moveEvalData.length;
 
             moveEvalData[move] = renderjson(pvEvals[move]);
 
-            button.setAttribute("id", move); // not unique id
-            button.innerHTML = move;
-            button.setAttribute("tagName", "button"); // ?
-            button.addEventListener("click", function()
-                                    {
-                                        showMove(move);
-                                        updateBoard(pvEvals[move]["FEN"]);
-                                    });
+            evalButtons[move].setAttribute("id", move); // not unique id
+            evalButtons[move].innerHTML = move;
+            evalButtons[move].setAttribute("tagName", "evalButtons[move]"); // ?
+            evalButtons[move].addEventListener("click", (function(_m) {
+                return function(){
+                    alert(_m);
+                    showMove(_m);
+                    updateBoard(pvEvals[_m]["FEN"]);
+                }
+            }(move)));
 
+            evalDivs[move].appendChild(evalButtons[move]);
+            evalDivs[move].appendChild(moveEvalData[move]);
 
-            div.appendChild(button);
-            div.appendChild(moveEvalData[move]);
-
-            json_el.appendChild(div);
+            json_el.appendChild(evalDivs[move]);
         }
     }
 
@@ -464,7 +472,6 @@
                     button.setAttribute("tagName", "button"); // temp
                     button.addEventListener("click", function()
                                             {
-                                                console.log(v);
                                                 decorateBoard(v);
                                             });
                     return button;
