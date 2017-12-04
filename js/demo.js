@@ -217,6 +217,22 @@
         board.arrow_manager.draw(from.rank, from.file, to.rank, to.file, board.color_values[board.highlight_colors.indexOf("red")]);
     }
 
+    function displayMoveData(move) {
+        if (move_el.firstChild) {
+            move_el.removeChild(move_el.firstChild);
+        }
+
+        var div = document.createElement("div"),
+            text = document.createElement("text");
+
+        text.innerHTML = move;
+
+        div.appendChild(text);
+        div.appendChild(renderjson(pvEvals[move]));
+
+        move_el.appendChild(div);
+    }
+
     function formatOutput(str)
     {
         moveEvalData=[];
@@ -247,6 +263,7 @@
             evalButtons[move].setAttribute("tagName", "evalButtons[move]"); // ?
             evalButtons[move].addEventListener("click", (function(_m) {
                 return function(){
+                    displayMoveData(_m);
                     updateBoard(pvEvals[_m]["FEN"], function () { showMove(_m); });
                 }
             }(move)));
