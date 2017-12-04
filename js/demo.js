@@ -5,18 +5,21 @@
     var main = document.getElementById("main");
     var board_el = document.createElement("div");
     var json_el = document.getElementById("dest");
+    var json_el = document.getElementById("currentMove");
     var BIT_LENGTH = 32;
     var ASSESS_TAG = "assess ";
     var REC_SETTINGS = {NONE: 0, IDEAS : 1, ATTRIBUTES : 2, IDEAS_AND_ATTRIBUTES: 3};
     var JSON_SHOW_LEVEL = 5;
     var board;
+    var pvMoves=[];
+    var pvEvals;
     var boardSize = 400;
     var engine;
     var eval_depth = 12;
     var eval_data = [];
     var inputFenStr = "r2qkb1r/pp1n1ppp/2pp1n2/3Pp2b/1PP1P3/2NB1P2/P3N1PP/R1BQ1RK1 b kq - 2 10";
     var jsonRaw=[];
-    var moveData=[];
+    var moveEvalData=[];
 
     // testing flags
     var TEST_BITMAPS=false;
@@ -180,19 +183,18 @@
         eval_pos();
     }
 
-    function updateBoard(cb)
+    function updateBoard(fen)
     {
-        createBoard(board_el, inputFenStr);
-        if (cb) cb();
+        createBoard(board_el, fen ? fen : inputFenStr);
         main.appendChild(board_el);
     }
 
     function showJson(move) {
-        for (var m in moveData) {
-            if (moveData[move].style.display === "none") {
-                moveData[move].style.display = "block";
+        for (var m in moveEvalData) {
+            if (moveEvalData[move].style.display === "none") {
+                moveEvalData[move].style.display = "block";
             } else {
-                moveData[move].style.display = "none";
+                moveEvalData[move].style.display = "none";
             }
         }
     }
@@ -211,31 +213,36 @@
 
     function formatOutput(str)
     {
-        moveData=[];
+        moveEvalData=[];
         var objs = JSON.parse(str);
+
+        pvMoves = objs["moves"];
+        pvEvals = objs["evals"];
 
         while (json_el.firstChild) {
             json_el.removeChild(json_el.firstChild);
         }
 
-        for (var obj in objs) {
-            var i = moveData.length,
+        for (var move in pvMoves) {
+            move = pvMoves[move];
+            var i = moveEvalData.length,
                 div = document.createElement("div"),
                 button = document.createElement("BUTTON");
 
-            moveData[obj] = renderjson(objs[obj]);
+            moveEvalData[move] = renderjson(pvEvals[move]);
 
-            button.setAttribute("id", obj); // not unique id
-            button.innerHTML = obj;
+            button.setAttribute("id", move); // not unique id
+            button.innerHTML = move;
             button.setAttribute("tagName", "button"); // ?
             button.addEventListener("click", function()
                                     {
-                                        showMove(obj);
+                                        showMove(move);
+                                        updateBoard(pvEvals[move]["FEN"]);
                                     });
 
 
             div.appendChild(button);
-            div.appendChild(moveData[obj]);
+            div.appendChild(moveEvalData[move]);
 
             json_el.appendChild(div);
         }
@@ -439,9 +446,9 @@
                 if (el.attributes)
                     for (var i=0; i<el.attributes.length; i++)
                         attributes += " "+el.attributes.item(i).name + "=\"" + el.attributes.item(i).value + "\"";
-                var obj = {};
-                obj["<"+el.tagName+attributes+">"] = Array.prototype.map.call(el.childNodes, obj_from_dom);
-                return obj;
+                var move = {};
+                move["<"+el.tagName+attributes+">"] = Array.prototype.map.call(el.childNodes, obj_from_dom);
+                return move;
             };
             if (v === window) return "<window>";
             if (v === document) return "<document>";
@@ -464,7 +471,6 @@
                 }
                 // move
                 if (/([A-Z][0-9][A-Z][0-9])/.test(v)) {
-                    alert('move');
                 }
             }
             if (typeof(v) == "object" && v && "nodeType" in v) return obj_from_dom(v);
