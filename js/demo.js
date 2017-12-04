@@ -5,7 +5,7 @@
     var main = document.getElementById("main");
     var board_el = document.createElement("div");
     var json_el = document.getElementById("dest");
-    var json_el = document.getElementById("currentMove");
+    var move_el = document.getElementById("currentMove");
     var BIT_LENGTH = 32;
     var ASSESS_TAG = "assess ";
     var REC_SETTINGS = {NONE: 0, IDEAS : 1, ATTRIBUTES : 2, IDEAS_AND_ATTRIBUTES: 3};
@@ -185,9 +185,10 @@
         eval_pos();
     }
 
-    function updateBoard(fen)
+    function updateBoard(fen, cmd)
     {
         createBoard(board_el, fen ? fen : inputFenStr);
+        if (cmd) cmd();
         main.appendChild(board_el);
     }
 
@@ -243,9 +244,7 @@
             evalButtons[move].setAttribute("tagName", "evalButtons[move]"); // ?
             evalButtons[move].addEventListener("click", (function(_m) {
                 return function(){
-                    alert(_m);
-                    showMove(_m);
-                    updateBoard(pvEvals[_m]["FEN"]);
+                    updateBoard(pvEvals[_m]["FEN"], function () { showMove(_m); });
                 }
             }(move)));
 
